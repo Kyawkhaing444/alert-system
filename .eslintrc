@@ -2,6 +2,7 @@
   "extends": [ "wesbos/typescript" ],
   "rules": {
     "no-console": 2,
+    "react/prop-types": [ 2, { "ignore": [ "children" ] } ],
     "prettier/prettier": [
       "error",
       {
