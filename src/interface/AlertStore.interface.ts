@@ -11,6 +11,7 @@ export interface IAlertStoreStates {
     alertType: AlertType;
     id: string;
     alertTitle: string;
+    createdAt: number;
 }
 
 export interface AlertStoreActionType {

@@ -10,6 +10,7 @@ export function AlertsExample() {
             link: { value: string };
             alertType: { value: AlertType };
             timeLimit: { value: number };
+            alertTitle: { value: string };
         };
         AlertReducer({
             type: 'addAlert',
@@ -19,16 +20,18 @@ export function AlertsExample() {
                 link: target.link.value,
                 timeLimit: target.timeLimit.value,
                 alertType: target.alertType.value,
-                alertTitle: 'Alert Title',
+                alertTitle: target.alertTitle.value,
+                createdAt: Date.now(),
             },
         });
     };
     return (
         <form className="w-full h-full flex flex-col justify-center items-center text-black" onSubmit={onSubmit}>
             <input placeholder="text" type="text" name="text" />
-            <input placeholder="link" type="text" name="link" />
+            <input placeholder="link" type="url" name="link" />
             <input placeholder="alertType" type="text" name="alertType" />
             <input placeholder="timeLimit" type="number" name="timeLimit" />
+            <input placeholder="alertTitle" type="text" name="alertTitle" />
             <button type="submit">Submit</button>
         </form>
     );

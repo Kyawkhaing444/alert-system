@@ -1,13 +1,64 @@
+import { Alert, AlertTitle, IconButton } from '@mui/material';
+import CloseIcon from '@mui/icons-material/Close';
+import { useCallback, useEffect } from 'react';
+import { IAlertStoreStates } from '../interface/AlertStore.interface';
 import { useAlertReducer } from './AlertManager';
 
 export function AlertComponent() {
-    const { state: alerts } = useAlertReducer();
+    const { state: alerts, dispatch: AlertReducer } = useAlertReducer();
+    const removeAlertHandler = useCallback(
+        (alert: IAlertStoreStates) => {
+            AlertReducer({
+                type: 'removeAlert',
+                payloads: alert,
+            });
+        },
+        [AlertReducer]
+    );
+    useEffect(() => {
+        const now = Date.now();
+        const timeouts = alerts.map((alert) => {
+            const durationLeft = (alert.timeLimit || 0) - (now - alert.createdAt);
+
+            if (durationLeft < 0) {
+                removeAlertHandler(alert);
+                return;
+            }
+            return setTimeout(() => removeAlertHandler(alert), durationLeft);
+        });
+
+        return () => {
+            timeouts.forEach((timeout) => timeout && clearTimeout(timeout));
+        };
+    }, [alerts, removeAlertHandler]);
     return (
         <div className="absolute top-5 right-5 flex flex-col justify-center items-center h-auto gap-4">
             {alerts.map((alert, index) => (
-                <div key={index} className="bg-gray-500 flex flex-col justify-center items-center">
-                    <div className="text-white text-center text-xl">{alert.text}</div>
-                </div>
+                <Alert
+                    onClick={() => {
+                        if (alert.link) {
+                            window.location.href = alert.link;
+                        }
+                    }}
+                    className={alert.link ? 'cursor-pointer' : ''}
+                    severity={alert.alertType}
+                    key={index}
+                    action={
+                        <IconButton
+                            aria-label="close"
+                            color="inherit"
+                            size="small"
+                            onClick={() => {
+                                removeAlertHandler(alert);
+                            }}
+                        >
+                            <CloseIcon fontSize="inherit" />
+                        </IconButton>
+                    }
+                >
+                    {alert.alertTitle && <AlertTitle>{alert.alertTitle}</AlertTitle>}
+                    {alert.text}
+                </Alert>
             ))}
         </div>
     );
