@@ -1,5 +1,4 @@
-import { Alert, AlertTitle, IconButton } from '@mui/material';
-import CloseIcon from '@mui/icons-material/Close';
+import { Alert, AlertTitle } from '@mui/material';
 import { useCallback, useEffect } from 'react';
 import { IAlertStoreStates } from '../interface/AlertStore.interface';
 import { useAlertReducer } from './AlertManager';
@@ -43,18 +42,6 @@ export function AlertComponent() {
                     className={alert.link ? 'cursor-pointer' : ''}
                     severity={alert.alertType}
                     key={index}
-                    action={
-                        <IconButton
-                            aria-label="close"
-                            color="inherit"
-                            size="small"
-                            onClick={() => {
-                                removeAlertHandler(alert);
-                            }}
-                        >
-                            <CloseIcon fontSize="inherit" />
-                        </IconButton>
-                    }
                 >
                     {alert.alertTitle && <AlertTitle>{alert.alertTitle}</AlertTitle>}
                     {alert.text}
